@@ -1,15 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tutorial/app/Signin/validaters.dart';
 import 'package:flutter_tutorial/app/widgets/show_alert_dialog.dart';
+import 'package:flutter_tutorial/app/widgets/show_exception.dart';
 import 'package:flutter_tutorial/services/auth.dart';
 import 'package:provider/provider.dart';
-
 
 enum EmailFormType { SignIn, Register }
 
 class EmailSignInForm extends StatefulWidget with EmailAndPasswwordValidators {
-
-
   @override
   _EmailSignInFormState createState() => _EmailSignInFormState();
 }
@@ -39,12 +38,12 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         await auth.createUserWithEmailAndPassword(email, password);
       }
       Navigator.of(context).pop();
-    } catch (e) {
-      showAlertDialog(
+    } on FirebaseAuthException catch (e) {
+      showExceptionAlertDialog(
         context,
-        title: "Sign in failed",
-        content: e.toString(),
-        defaultActionText: "OK",
+        "Sign In failed",
+        e,
+        "OK",
       );
     } finally {
       setState(() {
@@ -70,6 +69,15 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         ? _passwordFocusNode
         : _emailFocusNode;
     FocusScope.of(context).requestFocus(newScope);
+  }
+
+  @override
+  void dispose() { 
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    passwordController.dispose();
+    emailController.dispose();
+    super.dispose();
   }
 
   List<Widget> _buildChildren(BuildContext context) {

@@ -19,6 +19,7 @@ class CustomRaisedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       height: height,
+      disabledColor: color,
       onPressed: onPressed,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
