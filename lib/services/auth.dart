@@ -19,6 +19,8 @@ class Auth implements AuthBase {
     return _firebaseAuth.currentUser;
   }
 
+
+
   @override
   Stream<User> onAuthStateChanges() => _firebaseAuth.authStateChanges();
 
